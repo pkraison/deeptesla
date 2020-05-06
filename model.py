@@ -1,11 +1,13 @@
 #!/usr/bin/env python 
-from __future__ import division
+
 
 import tensorflow as tf
 import params
+tf.compat.v1.disable_v2_behavior()
+#tf.compat.v1.disable_eager_execution()
 
 def weight_variable(shape):
-    initial = tf.truncated_normal(shape, stddev=0.1)
+    initial = tf.random.normal(shape, stddev=0.1)
     return tf.Variable(initial)
 
 def bias_variable(shape):
@@ -15,8 +17,8 @@ def bias_variable(shape):
 def conv2d(x, W, stride):
     return tf.nn.conv2d(x, W, strides=[1, stride, stride, 1], padding='VALID')
 
-x = tf.placeholder(tf.float32, shape=[None, params.img_height, params.img_width, params.img_channels])
-y_ = tf.placeholder(tf.float32, shape=[None, 1])
+x = tf.compat.v1.placeholder(tf.float32, shape=[None, params.img_height, params.img_width, params.img_channels])
+y_ = tf.compat.v1.placeholder(tf.float32, shape=[None, 1])
 
 x_image = x
 
@@ -57,7 +59,7 @@ b_fc1 = bias_variable([1164])
 h_conv5_flat = tf.reshape(h_conv5, [-1, 1152])
 h_fc1 = tf.nn.relu(tf.matmul(h_conv5_flat, W_fc1) + b_fc1)
 
-keep_prob = tf.placeholder(tf.float32)
+keep_prob = tf.compat.v1.placeholder(tf.float32)
 h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
 
 # fully connected layer 2
@@ -88,4 +90,4 @@ h_fc4_drop = tf.nn.dropout(h_fc4, keep_prob)
 W_fc5 = weight_variable([10, 1])
 b_fc5 = bias_variable([1])
 
-y = tf.mul(tf.atan(tf.matmul(h_fc4_drop, W_fc5) + b_fc5), 2) #scale the atan output
+y = tf.multiply(tf.atan(tf.matmul(h_fc4_drop, W_fc5) + b_fc5), 2) #scale the atan output

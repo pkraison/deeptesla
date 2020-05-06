@@ -1,6 +1,4 @@
 #!/usr/bin/env python 
-from __future__ import division
-
 import tensorflow as tf
 import model
 import cv2
@@ -14,17 +12,18 @@ import visualize
 import time
 
 import local_common as cm
+tf.compat.v1.disable_v2_behavior()#tf.compat.v1.disable_eager_execution()
 
-sess = tf.InteractiveSession()
-saver = tf.train.Saver()
+sess = tf.compat.v1.InteractiveSession()
+saver = tf.compat.v1.train.Saver()
 model_name = 'model.ckpt'
 model_path = cm.jn(params.save_dir, model_name)
 saver.restore(sess, model_path)
 
-epoch_ids = sorted(list(set(itertools.chain(*params.epochs.values()))))
+epoch_ids = sorted(list(set(itertools.chain(*list(params.epochs.values())))))
 
 for epoch_id in epoch_ids:
-    print '---------- processing video for epoch {} ----------'.format(epoch_id)
+    print(('---------- processing video for epoch {} ----------'.format(epoch_id)))
     vid_path = cm.jn(params.data_dir, 'epoch{:0>2}_front.mkv'.format(epoch_id))
     assert os.path.isfile(vid_path)
     frame_count = cm.frame_count(vid_path)
@@ -32,9 +31,9 @@ for epoch_id in epoch_ids:
 
     machine_steering = []
 
-    print 'performing inference...'
+    print ('performing inference...')
     time_start = time.time()
-    for frame_id in xrange(frame_count):
+    for frame_id in range(frame_count):
         ret, img = cap.read()
         assert ret
 
@@ -46,9 +45,9 @@ for epoch_id in epoch_ids:
 
     fps = frame_count / (time.time() - time_start)
     
-    print 'completed inference, total frames: {}, average fps: {} Hz'.format(frame_count, round(fps, 1))
+    print(('completed inference, total frames: {}, average fps: {} Hz'.format(frame_count, round(fps, 1))))
     
-    print 'performing visualization...'
+    print ('performing visualization...')
     visualize.visualize(epoch_id, machine_steering, params.out_dir,
                         verbose=True, frame_count_limit=None)
     

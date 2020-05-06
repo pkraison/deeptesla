@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from __future__ import division
+
 
 import subprocess as sp
 import os
@@ -82,9 +82,9 @@ def visualize(epoch_id, machine_steering, out_dir, perform_smoothing=False,
     vw = cv2.VideoWriter(out_path, cv2.VideoWriter_fourcc(*'X264' ), 30, vid_size)
     w, h = vid_size
 
-    for f_cur in xrange(len(machine_steering)):
+    for f_cur in range(len(machine_steering)):
         if (f_cur != 0) and (f_cur % verbose_progress_step == 0):
-            print 'completed {} of {} frames'.format(f_cur, len(machine_steering))
+            print('completed {} of {} frames'.format(f_cur, len(machine_steering)))
 
         if (frame_count_limit is not None) and (f_cur >= frame_count_limit):
             break
@@ -114,7 +114,7 @@ def visualize(epoch_id, machine_steering, out_dir, perform_smoothing=False,
         win_before, win_after = 150, 150
 
         xx, hh, mm = [], [], []
-        for f_rel in xrange(-win_before, win_after+1):
+        for f_rel in range(-win_before, win_after+1):
             f_abs = f_cur + f_rel
             if f_abs < 0 or f_abs >= len(machine_steering):
                 continue

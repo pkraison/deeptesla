@@ -1,4 +1,4 @@
-from __future__ import division
+
 
 import datetime
 import time
@@ -88,13 +88,13 @@ def is_int(s):
         return False
 
 def is_str(obj):
-    return isinstance(obj, basestring)
+    return isinstance(obj, str)
 
 def is_long(s):
     assert not is_sequence(s)
 
     try: 
-        long(s)
+        int(s)
         return True
     except ValueError:
         return False
@@ -117,12 +117,12 @@ def get_postgres_type_from_variable(x):
         return postgres_null_type
     elif is_str(x):
         return get_postgres_type_from_str(x)
-    elif isinstance(x, int) or isinstance(x, long):
+    elif isinstance(x, int) or isinstance(x, int):
         return postgres_long_type
     elif isinstance(x, float) or isinstance(x, decimal.Decimal):
         return postgres_double_type
     else:
-        print 'Incorrect type is {}'.format(type(x))
+        print(('Incorrect type is {}'.format(type(x))))
         assert False
 
 def get_postgres_type_from_str(s):
@@ -140,7 +140,7 @@ def cast_str_to_type_force(s, type_to_force):
         return int(s)
     elif type_to_force == postgres_long_type:
         assert is_long(s)
-        return long(s)
+        return int(s)
     elif type_to_force == postgres_double_type:
         assert is_number(s)
         return float(s)
@@ -184,7 +184,7 @@ def determine_types_from_rows(rows, consider_only_a_sample=True):
         assert len(types) == len(row)
         
         if isinstance(row, OrderedDict):
-            vals = row.values()
+            vals = list(row.values())
         elif isinstance(row, list):
             vals = row
         else:
@@ -202,8 +202,8 @@ def apply_types_to_row(types, row):
     assert len(types) == len(row)
 
     if isinstance(row, OrderedDict):
-        keys = row.keys()
-        vals = row.values()
+        keys = list(row.keys())
+        vals = list(row.values())
     elif isinstance(row, list):
         vals = row
     else:
@@ -213,7 +213,7 @@ def apply_types_to_row(types, row):
         vals[i] = cast_str_to_type_force(x, type_to_force=types[i])
 
     if isinstance(row, OrderedDict):
-        return OrderedDict(zip(keys, vals))
+        return OrderedDict(list(zip(keys, vals)))
     elif isinstance(row, list):
         return vals
 
@@ -233,7 +233,7 @@ def fetch_csv_data(filepath, delimiter=',', consider_only_a_sample=False, univ_n
     open_flag += 'U' if univ_new_line else ''
     row_counter = 0
 
-    with open(filepath, open_flag) as csvfile:
+    with open(filepath, 'rt') as csvfile:
         reader = csv.reader(csvfile, delimiter=delimiter)
         fields = None
         
@@ -249,14 +249,14 @@ def fetch_csv_data(filepath, delimiter=',', consider_only_a_sample=False, univ_n
                 continue
 
             if len(fields) != len(row):
-                print 'fields:', fields
-                print 'row:', row
+                print(('fields:', fields))
+                print(('row:', row))
                                     
             assert len(fields) == len(row)
 
             # remove fields not in 'include_only_these_fields' if it's defined
             if include_only_these_fields is None:
-                d = OrderedDict(zip(fields, row))
+                d = OrderedDict(list(zip(fields, row)))
             else:
                 assert set(include_only_these_fields).issubset(set(fields))
                 d = OrderedDict()
@@ -351,7 +351,7 @@ def ffmpeg_frame_count(path):
 
     for line in lines:
         line = line.strip()
-        res = re.match(r'frame=\s*(\d+)\s*fps=', line)
+        res = re.match(r'frame=\s*(\d+)\s*fps=', line.decode('utf-8'))
         if res:
             fc = res.group(1)
             

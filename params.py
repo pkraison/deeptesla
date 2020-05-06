@@ -1,5 +1,5 @@
 #!/usr/bin/env python 
-from __future__ import division
+
 
 import os
 from collections import OrderedDict
@@ -13,8 +13,8 @@ img_channels = 3
 write_summary = True
 
 # change this to the directory that contains the source videos
-data_dir = os.path.abspath('./epochs')
-out_dir = os.path.abspath('./output')
+data_dir = os.path.abspath('epochs')
+out_dir = os.path.abspath('output')
 shuffle_training = True
 
 assert os.path.isdir(data_dir)

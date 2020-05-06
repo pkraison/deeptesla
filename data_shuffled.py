@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from __future__ import division
+
 
 import random
 import os
@@ -32,8 +32,8 @@ def load_imgs():
 
     for p in purposes:
         for epoch_id in epochs[p]:
-            print 'processing and loading "{}" epoch {} into memory, current num of imgs is {}...'.format(
-                p, epoch_id, len(imgs[p]))
+            print('processing and loading "{}" epoch {} into memory, current num of imgs is {}...'.format(
+                p, epoch_id, len(imgs[p])))
 
             vid_path = cm.jn(data_dir, 'epoch{:0>2}_front.mkv'.format(epoch_id))
             assert os.path.isfile(vid_path)
@@ -65,7 +65,7 @@ def load_batch(purpose):
     n = len(imgs[p])
     assert n > 0
 
-    ii = random.sample(xrange(0, n), params.batch_size)
+    ii = random.sample(range(0, n), params.batch_size)
     assert len(ii) == params.batch_size
 
     xx, yy = [], []

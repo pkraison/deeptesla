@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from __future__ import division
+
 
 import random
 import os
@@ -26,7 +26,7 @@ for purpose in purposes:
     batches[purpose] = []
 
 # determine the epoch_id, frame_start, frame_end
-for purpose in epochs.keys():
+for purpose in list(epochs.keys()):
     assert len(epochs[purpose]) > 0
     for epoch_id in epochs[purpose]:
         vid_path = cm.jn(data_dir, 'epoch{:0>2}_front.mkv'.format(epoch_id))
@@ -36,7 +36,7 @@ for purpose in epochs.keys():
 
         batch_count = int(frame_count / batch_size)
         assert batch_count >= 1
-        for b in xrange(batch_count):
+        for b in range(batch_count):
             assert purpose in batches
             frame_start = b * batch_size
             frame_end = frame_start + batch_size - 1
@@ -79,7 +79,7 @@ def load_batch(purpose):
     assert frame_count == len(rows)
     yy = [[float(row['wheel'])] for row in rows[frame_start:frame_end+1]]
 
-    for frame_id in xrange(frame_start, frame_end+1):
+    for frame_id in range(frame_start, frame_end+1):
         ret, img = cap.read()
         assert ret
 
